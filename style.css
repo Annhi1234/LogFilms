@@ -169,6 +169,12 @@ header input[type="text"]:focus {
     cursor: pointer;
 }
 
+.movie-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    border: 4px solid #2563eb;
+}
+
 #p2 {
     color: white;
     font-size: 18px;

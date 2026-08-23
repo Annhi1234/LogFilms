@@ -173,6 +173,7 @@ header input[type="text"]:focus {
     transform: translateY(-3px);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
     border: 4px solid #2563eb;
+    transition: all 0.3s ease;
 }
 
 #p2 {
@@ -186,4 +187,32 @@ header input[type="text"]:focus {
 #h31 {
     display: flex;
     justify-content: center;
+}
+.top-btn {
+    padding-bottom: 8px;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #3c82f8;
+    color: white;
+    border: none;
+    font-size: 25px;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.top-btn.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.top-btn:hover {
+    transform: scale(1.1);
+    background: #2563eb;
 }

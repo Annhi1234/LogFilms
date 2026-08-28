@@ -34,9 +34,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const Golbtn = document.querySelector('.GolBtn');
     const OnBtn = document.querySelector('.OnBtn');
     const scrollBtn = document.querySelector('.top-btn');
-    const searchBtn = document.querySelector('.search-btn');
+    const searchBtn = document.querySelector('.searchBtn');
     const searchInput = document.querySelector('.search-input');
     const errorDisplay = document.querySelector('.error');
+    const WelcomeTXT = document.querySelector('.Welcome');
 
     function getRandomMovies(count = 18) {
         const shuffled = [...MOVIE_LIST].sort(() => Math.random() - 0.5);
@@ -85,7 +86,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     `;
             } else {
-                recommend.innerHTML = `<p>Фільм не знайдено</p>`;
+                recommend.innerHTML = `
+                <div class="not-found-container">
+                <p class="not-found">Нажаль ваш фільм не було знайдено :(</p>
+                <p class="not-found">Спробуйте перефразувати назву або перевірити правильність написання</p>
+                </div>`;
             }
         } catch (error) {
             errorDisplay.innerHTML = `<p>Помилка: ${error.message}</p>`;
@@ -121,8 +126,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const title = searchInput.value.trim();
         if (title) {
             searchMovie(title);
+            WelcomeTXT.classList.add('hidden');
         } else {
             alert('Будь ласка, введіть назву фільму');
+            loadMovies();
         }
     });
 

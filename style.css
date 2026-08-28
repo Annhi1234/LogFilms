@@ -150,6 +150,10 @@ header input[type="text"]:focus {
     margin: 0;
 }
 
+.Welcome.hidden {
+    display: none;
+}
+
 .recommend {
     display: flex;
     flex-wrap: wrap;
@@ -223,4 +227,18 @@ footer {
     align-items: center;
     font-weight: bold;
     font-style: italic;
+}
+
+.not-found {
+    font-size: 20px;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.not-found-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 12px;
+    padding: 0 20px;
 }

@@ -34,6 +34,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const Golbtn = document.querySelector('.GolBtn');
     const OnBtn = document.querySelector('.OnBtn');
     const scrollBtn = document.querySelector('.top-btn');
+    const searchBtn = document.querySelector('.search-btn');
+    const searchInput = document.querySelector('.search-input');
+    const errorDisplay = document.querySelector('.error');
 
     function getRandomMovies(count = 18) {
         const shuffled = [...MOVIE_LIST].sort(() => Math.random() - 0.5);
@@ -68,6 +71,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    async function searchMovie(title) {
+        try {
+            const response = await fetch(`${BASE_URL}?apikey=${API_KEY}&t=${encodeURIComponent(title)}`);
+            const movie = await response.json();
+            if (movie.Response === 'True') {
+                recommend.innerHTML = `
+                    <div class="movie-card">
+                        <img src="${movie.Poster}" alt="${movie.Title}">
+                        <h3 id="h31">${movie.Title}</h3>
+                        <p id="p2">Рік: ${movie.Year}</p>
+                        <p id="p2">Оцінка: ${movie.imdbRating}</p>
+                        </div>
+                    `;
+            } else {
+                recommend.innerHTML = `<p>Фільм не знайдено</p>`;
+            }
+        } catch (error) {
+            errorDisplay.innerHTML = `<p>Помилка: ${error.message}</p>`;
+        }
+    }
+
     Golbtn.addEventListener('click', () => {
        window.location.href = 'index.html';
     });
@@ -91,6 +115,15 @@ document.addEventListener('DOMContentLoaded', () => {
             top: 0,
             behavior: 'smooth'
         });
+    });
+
+    searchBtn.addEventListener('click', () => {
+        const title = searchInput.value.trim();
+        if (title) {
+            searchMovie(title);
+        } else {
+            alert('Будь ласка, введіть назву фільму');
+        }
     });
 
 });

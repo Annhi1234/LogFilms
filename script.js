@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const API_KEY = '48b3e8cb';
     const BASE_URL = 'https://www.omdbapi.com/';
 
+    const email = 'rty2791@gmail.com';
+
     const MOVIE_LIST = [
     'Inception', 'The Dark Knight', 'Interstellar', 'The Matrix',
     'Pulp Fiction', 'Fight Club', 'Forrest Gump', 'The Godfather',
@@ -66,12 +68,95 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p id="p2">Оцінка: ${movie.imdbRating}</p>
                 </div>
             `).join('');
+            
+            document.querySelectorAll('.movie-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    openMovieModal(JSON.parse(this.dataset.movie));
+                });
+            });
 
         } catch (error) {
             recommend.innerHTML = `<p>Помилка: ${error.message}</p>`;
         }
     }
+    function openMovieModal(movie) {
+        const modal = document.getElementById('movieModal');
+        const modalBody = document.getElementById('modalBody');
+        
+        modalBody.innerHTML = `
+            <div class="movie-modal-layout">
+                <div class="movie-modal-poster">
+                    <img src="${movie.Poster !== 'N/A' ? movie.Poster : 'placeholder.jpg'}" alt="${movie.Title}">
+                </div>
+                <div class="movie-modal-info">
+                    <h2>${movie.Title}</h2>
+                    <div class="movie-year">${movie.Year || 'Невідомо'}</div>
+                    <div class="movie-rating">⭐ ${movie.imdbRating !== 'N/A' ? movie.imdbRating : 'Немає оцінки'}</div>
+                    <div>
+                        ${movie.Genre ? movie.Genre.split(', ').map(genre => 
+                            `<span class="movie-genre">${genre}</span>`
+                        ).join('') : ''}
+                    </div>
+                    <div class="movie-plot">
+                        <strong>Сюжет:</strong>
+                        <p>${movie.Plot || 'Опис відсутній'}</p>
+                    </div>
+                    <div class="movie-detail-item">
+                        <strong>Режисер:</strong>
+                        <span>${movie.Director || 'Невідомо'}</span>
+                    </div>
+                    <div class="movie-detail-item">
+                        <strong>Актори:</strong>
+                        <span>${movie.Actors || 'Невідомо'}</span>
+                    </div>
+                    <div class="movie-detail-item">
+                        <strong>Країна:</strong>
+                        <span>${movie.Country || 'Невідомо'}</span>
+                    </div>
+                    <div class="movie-detail-item">
+                        <strong>Мова:</strong>
+                        <span>${movie.Language || 'Невідомо'}</span>
+                    </div>
+                    <div class="movie-detail-item">
+                        <strong>Нагороди:</strong>
+                        <span>${movie.Awards || 'Немає інформації'}</span>
+                    </div>
+                    <div class="movie-detail-item">
+                        <strong>IMDb ID:</strong>
+                        <span>${movie.imdbID || 'Немає'}</span>
+                    </div>
+                    ${movie.Website && movie.Website !== 'N/A' ? `
+                        <div style="margin-top: 20px;">
+                            <a href="${movie.Website}" target="_blank" style="color: #ffd700; text-decoration: underline;">
+                                🔗 Офіційний сайт
+                            </a>
+                        </div>
+                    ` : ''}
+                    ${movie.imdbID ? `
+                        <div style="margin-top: 10px;">
+                            <a href="https://www.imdb.com/title/${movie.imdbID}/" target="_blank" style="color: #ffd700; text-decoration: underline;">
+                                🎬 Дивитись на IMDb
+                            </a>
+                        </div>
+                    ` : ''}
+                </div>
+            </div>
+        `;
+        
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        
+        modal.querySelector('.close-button').onclick = closeMovieModal;
+        modal.onclick = (event) => { if (event.target === modal) closeMovieModal(); };
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMovieModal(); });
+    }
 
+    function closeMovieModal() {
+        const modal = document.getElementById('movieModal');
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+    
     async function searchMovie(title) {
         try {
             const response = await fetch(`${BASE_URL}?apikey=${API_KEY}&t=${encodeURIComponent(title)}`);

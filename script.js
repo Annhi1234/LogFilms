@@ -124,8 +124,8 @@ document.addEventListener('DOMContentLoaded', () => {
             movie.production_countries.map(c => c.name).join(', ') || 'Невідомо' : 'Невідомо';
         const languages = movie.spoken_languages ? 
             movie.spoken_languages.map(l => l.name).join(', ') || 'Невідомо' : 'Невідомо';
-        const budget = movie.budget ? `$${movie.budget.toLocaleString()}` : 'Немає інформації';
-        const revenue = movie.revenue ? `$${movie.revenue.toLocaleString()}` : 'Немає інформації';
+        const budget = movie.budget ? `$${movie.budget.toLocaleString()}` : 'Невідомо';
+        const revenue = movie.revenue ? `$${movie.revenue.toLocaleString()}` : 'Невідомо';
         const imdbId = movie.imdb_id || 'Немає';
         const homepage = movie.homepage || '';
 

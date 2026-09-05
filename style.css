@@ -77,7 +77,6 @@ header input[type="text"]:focus {
 
 .searchBtn,
 .OnBtn,
-.ObBtn,
 .GolBtn {
     padding: 12px 24px;
     border-radius: var(--radius);
@@ -112,24 +111,6 @@ header input[type="text"]:focus {
 }
 
 .GolBtn:hover {
-    background: var(--accent);
-    color: white;
-    border-color: var(--accent);
-}
-
-.ObBtn-wrapper {
-    flex: 1;
-    display: flex;
-    justify-content: flex-end;
-}
-
-.ObBtn {
-    background: transparent;
-    color: var(--text);
-    border-color: var(--border);
-}
-
-.ObBtn:hover {
     background: var(--accent);
     color: white;
     border-color: var(--accent);

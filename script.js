@@ -33,13 +33,14 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     const recommend = document.querySelector('.recommend');
-    const Golbtn = document.querySelector('.GolBtn');
+    const GolBtn = document.querySelector('.GolBtn');
     const OnBtn = document.querySelector('.OnBtn');
     const scrollBtn = document.querySelector('.top-btn');
     const searchBtn = document.querySelector('.searchBtn');
     const searchInput = document.querySelector('.search-input');
     const errorDisplay = document.querySelector('.error');
     const WelcomeTXT = document.querySelector('.Welcome');
+    const ObBtn = document.querySelector('.ObBtn');
 
     function getRandomMovies(count = 18) {
         const shuffled = [...MOVIE_LIST].sort(() => Math.random() - 0.5);
@@ -248,8 +249,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    Golbtn.addEventListener('click', () => {
+    GolBtn.addEventListener('click', () => {
         window.location.href = 'index.html';
+    });
+
+    ObBtn.addEventListener('click', () => {
+        window.location.href = 'obrane.html';
     });
 
     OnBtn.addEventListener('click', () => {

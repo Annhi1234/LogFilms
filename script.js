@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     const recommend = document.querySelector('.recommend');
-    const Golbtn = document.querySelector('.GolBtn');
+    const GolBtn = document.querySelector('.GolBtn');
     const OnBtn = document.querySelector('.OnBtn');
     const scrollBtn = document.querySelector('.top-btn');
     const searchBtn = document.querySelector('.searchBtn');
@@ -248,8 +248,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    Golbtn.addEventListener('click', () => {
+    GolBtn.addEventListener('click', () => {
         window.location.href = 'index.html';
+
     });
 
     OnBtn.addEventListener('click', () => {

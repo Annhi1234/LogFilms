@@ -46,11 +46,119 @@ header h1 {
 }
 
 .search-container {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: var(--space-sm);
     flex: 2;
+}
+
+.filterBtn {
+    padding: 12px 18px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text);
+    white-space: nowrap;
+    transition: var(--transition);
+}
+
+.filterBtn:hover,
+.filterBtn.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}
+
+.filterPanel {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: var(--space-md);
+    width: 260px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.filterPanel.hidden {
+    display: none;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.filter-group label {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.filter-group select {
+    padding: 10px 12px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text);
+    font-size: 14px;
+    outline: none;
+    color-scheme: dark;
+}
+
+.filter-group select option {
+    background: var(--bg-elevated);
+    color: var(--text);
+}
+
+.filter-group select:focus {
+    border-color: var(--accent);
+}
+
+.filter-actions {
+    display: flex;
+    gap: var(--space-sm);
+    margin-top: 4px;
+}
+
+.filter-actions button {
+    flex: 1;
+    padding: 10px 12px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    border: 1px solid transparent;
+    transition: var(--transition);
+}
+
+.applyFilterBtn {
+    background: var(--accent);
+    color: white;
+}
+
+.applyFilterBtn:hover {
+    background: var(--accent-hover);
+}
+
+.resetFilterBtn {
+    background: transparent;
+    color: var(--text);
+    border-color: var(--border);
+}
+
+.resetFilterBtn:hover {
+    background: rgba(255, 255, 255, 0.1);
 }
 
 header input[type="text"] {

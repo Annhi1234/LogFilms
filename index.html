@@ -12,8 +12,37 @@
         <h1>LogFilms</h1>
         <p class="error"></p>
         <div class="search-container">
+            <button class="filterBtn" type="button">☰ Фільтри</button>
             <input class='search-input'type="text" placeholder="Введіть назву фільму">
             <button class="searchBtn">Знайти</button>
+
+            <div class="filterPanel hidden">
+                <div class="filter-group">
+                    <label for="genreSelect">Жанр</label>
+                    <select id="genreSelect" class="genre-select">
+                        <option value="">Будь-який</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="yearSelect">Рік</label>
+                    <select id="yearSelect" class="year-select">
+                        <option value="">Будь-який</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="sortSelect">Сортування</label>
+                    <select id="sortSelect" class="sort-select">
+                        <option value="popularity.desc">За популярністю</option>
+                        <option value="vote_average.desc">За рейтингом</option>
+                        <option value="release_date.desc">Спочатку нові</option>
+                        <option value="release_date.asc">Спочатку старі</option>
+                    </select>
+                </div>
+                <div class="filter-actions">
+                    <button class="applyFilterBtn">Застосувати</button>
+                    <button class="resetFilterBtn">Скинути</button>
+                </div>
+            </div>
         </div>
 
         <div class="GolBtn-wrapper">

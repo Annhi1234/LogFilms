@@ -52,6 +52,49 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentFilters = { genre: '', year: '', sort: 'popularity.desc' };
 
+    function getCurrentUser() {
+        return JSON.parse(localStorage.getItem('logfilms_current') || 'null');
+    }
+
+    function getWishlistKey() {
+        const user = getCurrentUser();
+        if (!user) return null;
+        const id = user.uuid || user.id || user.username;
+        return `wishlist_${id}`;
+    }
+
+    function getWishlist() {
+        const key = getWishlistKey();
+        if (!key) return [];
+        return JSON.parse(localStorage.getItem(key) || '[]');
+    }
+
+    function isInWishlist(movieId) {
+        const wishlist = getWishlist();
+        return wishlist.some(m => m.id === movieId);
+    }
+
+    function toggleWishlist(movie) {
+        const key = getWishlistKey();
+        if (!key) {
+            alert('Будь ласка, увійдіть в акаунт, щоб додавати фільми у бажане!');
+            window.location.href = 'login.html';
+            return false;
+        }
+
+        let wishlist = getWishlist();
+        const exists = wishlist.some(m => m.id === movie.id);
+
+        if (exists) {
+            wishlist = wishlist.filter(m => m.id !== movie.id);
+        } else {
+            wishlist.push(movie);
+        }
+
+        localStorage.setItem(key, JSON.stringify(wishlist));
+        return !exists;
+    }
+
     function getRandomMovies(count = 18) {
         const shuffled = [...MOVIE_LIST].sort(() => Math.random() - 0.5);
         return shuffled.slice(0, count);
@@ -169,7 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function openMovieModal(movie) {
+    window.openMovieModal = function(movie) {
         const modal = document.getElementById('movieModal');
         const modalBody = document.getElementById('modalBody');
 
@@ -177,7 +220,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const title = movie.title || movie.original_title || 'Невідомо';
         const year = movie.release_date ? movie.release_date.split('-')[0] : 'Невідомо';
         const rating = movie.vote_average ? movie.vote_average.toFixed(1) : 'Немає оцінки';
-        const genres = movie.genres ? movie.genres.map(g => g.name).join(', ') : 'Невідомо';
         const overview = movie.overview || 'Опис відсутній';
         const director = movie.credits && movie.credits.crew ?
             movie.credits.crew.find(person => person.job === 'Director')?.name || 'Невідомо' : 'Невідомо';
@@ -192,13 +234,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const imdbId = movie.imdb_id || 'Немає';
         const homepage = movie.homepage || '';
 
+        const inWishlist = isInWishlist(movie.id);
+
         modalBody.innerHTML = `
             <div class="movie-modal-layout">
                 <div class="movie-modal-poster">
                     <img src="${poster}" alt="${title}">
                 </div>
                 <div class="movie-modal-info">
-                    <button class="bazaneBtn">Додати у бажане</button>
+                    <button class="bazaneBtn ${inWishlist ? 'active' : ''}">
+                        ${inWishlist ? 'Видалити з бажаного' : 'Додати у бажане'}
+                    </button>
                     <h2>${title}</h2>
                     <div class="movie-year">${year}</div>
                     <div class="movie-rating">⭐ ${rating}</div>
@@ -257,13 +303,27 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
 
+        const bazaneBtn = modalBody.querySelector('.bazaneBtn');
+        bazaneBtn.addEventListener('click', () => {
+            const added = toggleWishlist(movie);
+            if (added) {
+                bazaneBtn.classList.add('active');
+                bazaneBtn.textContent = 'Видалити з бажаного';
+            } else {
+                bazaneBtn.classList.remove('active');
+                bazaneBtn.textContent = 'Додати у бажане';
+            }
+            if (typeof window.renderWishlist === 'function') {
+                window.renderWishlist();
+            }
+        });
+
         modal.style.display = 'block';
         document.body.style.overflow = 'hidden';
 
         modal.querySelector('.close-button').onclick = closeMovieModal;
         modal.onclick = (event) => { if (event.target === modal) closeMovieModal(); };
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMovieModal(); });
-    }
+    };
 
     function closeMovieModal() {
         const modal = document.getElementById('movieModal');
@@ -301,7 +361,7 @@ document.addEventListener('DOMContentLoaded', () => {
             renderMovieCards(movies);
 
         } catch (error) {
-            errorDisplay.innerHTML = `<p>Помилка: ${error.message}</p>`;
+            if (errorDisplay) errorDisplay.innerHTML = `<p>Помилка: ${error.message}</p>`;
         }
     }
 
@@ -328,7 +388,7 @@ document.addEventListener('DOMContentLoaded', () => {
             renderMovieCards(movies);
 
         } catch (error) {
-            errorDisplay.innerHTML = `<p>Помилка: ${error.message}</p>`;
+            if (errorDisplay) errorDisplay.innerHTML = `<p>Помилка: ${error.message}</p>`;
         }
     }
 
@@ -345,16 +405,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!title) {
             if (hasActiveFilters()) {
-                WelcomeTXT.classList.add('hidden');
+                if (WelcomeTXT) WelcomeTXT.classList.add('hidden');
                 discoverMovies(currentFilters);
             } else {
-                WelcomeTXT.classList.remove('hidden');
+                if (WelcomeTXT) WelcomeTXT.classList.remove('hidden');
                 loadMovies();
             }
             return;
         }
 
-        WelcomeTXT.classList.add('hidden');
+        if (WelcomeTXT) WelcomeTXT.classList.add('hidden');
         searchMovieWithFilters(title, currentFilters);
     }, 300);
 
@@ -367,7 +427,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        WelcomeTXT.classList.add('hidden');
+        if (WelcomeTXT) WelcomeTXT.classList.add('hidden');
 
         if (title) {
             searchMovieWithFilters(title, currentFilters);
@@ -376,78 +436,87 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    OnBtn.addEventListener('click', () => {
-        loadMovies();
-    });
-
-    scrollBtn.addEventListener('click', () => {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
+    if (OnBtn) {
+        OnBtn.addEventListener('click', () => {
+            loadMovies();
         });
-    });
+    }
 
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 300) {
-            scrollBtn.classList.add('visible');
-        } else {
-            scrollBtn.classList.remove('visible');
-        }
-    });
+    if (scrollBtn) {
+        scrollBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
 
-    searchBtn.addEventListener('click', () => {
-        performSearch();
-    });
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollBtn.classList.add('visible');
+            } else {
+                scrollBtn.classList.remove('visible');
+            }
+        });
+    }
 
-    searchInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            performSearch();
-        }
-    });
+    if (searchBtn) searchBtn.addEventListener('click', performSearch);
 
-    searchInput.addEventListener('input', liveSearch);
+    if (searchInput) {
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') performSearch();
+        });
+        searchInput.addEventListener('input', liveSearch);
+    }
 
-    filterBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        filterPanel.classList.toggle('hidden');
-        filterBtn.classList.toggle('active');
-    });
+    if (filterBtn) {
+        filterBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            filterPanel.classList.toggle('hidden');
+            filterBtn.classList.toggle('active');
+        });
+    }
 
-    filterPanel.addEventListener('click', (e) => {
-        e.stopPropagation();
-    });
+    if (filterPanel) {
+        filterPanel.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+    }
 
     document.addEventListener('click', () => {
-        filterPanel.classList.add('hidden');
-        filterBtn.classList.remove('active');
+        if (filterPanel) filterPanel.classList.add('hidden');
+        if (filterBtn) filterBtn.classList.remove('active');
     });
 
-    applyFilterBtn.addEventListener('click', () => {
-        currentFilters = {
-            genre: genreSelect.value,
-            year: yearSelect.value,
-            sort: sortSelect.value
-        };
-        filterPanel.classList.add('hidden');
-        filterBtn.classList.remove('active');
-        performSearch();
-    });
+    if (applyFilterBtn) {
+        applyFilterBtn.addEventListener('click', () => {
+            currentFilters = {
+                genre: genreSelect.value,
+                year: yearSelect.value,
+                sort: sortSelect.value
+            };
+            filterPanel.classList.add('hidden');
+            filterBtn.classList.remove('active');
+            performSearch();
+        });
+    }
 
-    resetFilterBtn.addEventListener('click', () => {
-        genreSelect.value = '';
-        yearSelect.value = '';
-        sortSelect.value = 'popularity.desc';
-        currentFilters = { genre: '', year: '', sort: 'popularity.desc' };
-        filterPanel.classList.add('hidden');
-        filterBtn.classList.remove('active');
-        loadMovies();
-        WelcomeTXT.classList.remove('hidden');
-        searchInput.value = '';
-    });
+    if (resetFilterBtn) {
+        resetFilterBtn.addEventListener('click', () => {
+            genreSelect.value = '';
+            yearSelect.value = '';
+            sortSelect.value = 'popularity.desc';
+            currentFilters = { genre: '', year: '', sort: 'popularity.desc' };
+            filterPanel.classList.add('hidden');
+            filterBtn.classList.remove('active');
+            loadMovies();
+            if (WelcomeTXT) WelcomeTXT.classList.remove('hidden');
+            searchInput.value = '';
+        });
+    }
 
     function updateAuthUI() {
-        const user = JSON.parse(localStorage.getItem('logfilms_current') || 'null');
-        if (user) {
+        const user = getCurrentUser();
+        if (user && GolBtn && LogBtn) {
             GolBtn.style.display = 'inline-block';
             GolBtn.onclick = () => {
                 window.location.href = 'bazane.html';
@@ -457,8 +526,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.removeItem('logfilms_current');
                 window.location.reload();
             };
-        } else {
-            GolBtn.style.display = 'none';
+        } else if (LogBtn) {
+            if (GolBtn) GolBtn.style.display = 'none';
             LogBtn.textContent = 'Увійти';
             LogBtn.onclick = () => {
                 window.location.href = 'login.html';
@@ -467,7 +536,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     updateAuthUI();
-    fetchGenres();
-    populateYears();
-    loadMovies();
+    if (genreSelect) fetchGenres();
+    if (yearSelect) populateYears();
+    if (recommend && !document.getElementById('wishlistContainer')) {
+        loadMovies();
+    }
 });

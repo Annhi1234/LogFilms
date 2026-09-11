@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const recommend = document.querySelector('.recommend');
     const GolBtn = document.querySelector('.GolBtn');
     const OnBtn = document.querySelector('.OnBtn');
+    const LogBtn = document.querySelector('.LoginBtn');
     const scrollBtn = document.querySelector('.top-btn');
     const searchBtn = document.querySelector('.searchBtn');
     const searchInput = document.querySelector('.search-input');
@@ -197,6 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <img src="${poster}" alt="${title}">
                 </div>
                 <div class="movie-modal-info">
+                    <button class="bazaneBtn">Додати у бажане</button>
                     <h2>${title}</h2>
                     <div class="movie-year">${year}</div>
                     <div class="movie-rating">⭐ ${rating}</div>
@@ -374,10 +376,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    GolBtn.addEventListener('click', () => {
-        window.location.href = 'index.html';
-    });
-
     OnBtn.addEventListener('click', () => {
         loadMovies();
     });
@@ -447,6 +445,28 @@ document.addEventListener('DOMContentLoaded', () => {
         searchInput.value = '';
     });
 
+    function updateAuthUI() {
+        const user = JSON.parse(localStorage.getItem('logfilms_current') || 'null');
+        if (user) {
+            GolBtn.style.display = 'inline-block';
+            GolBtn.onclick = () => {
+                window.location.href = 'bazane.html';
+            };
+            LogBtn.textContent = 'Вийти (' + user.username + ')';
+            LogBtn.onclick = () => {
+                localStorage.removeItem('logfilms_current');
+                window.location.reload();
+            };
+        } else {
+            GolBtn.style.display = 'none';
+            LogBtn.textContent = 'Увійти';
+            LogBtn.onclick = () => {
+                window.location.href = 'login.html';
+            };
+        }
+    }
+
+    updateAuthUI();
     fetchGenres();
     populateYears();
     loadMovies();

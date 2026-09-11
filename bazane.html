@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="images/LogFilms.png">
+    <title>LogFilms — Бажане</title>
+</head>
+<body>
+    <header>
+        <h1>LogFilms</h1>
+        <div class="search-container"></div>
+        <div class="GolBtn-wrapper">
+            <button class="homeBtn">На головну</button>
+            <button class="LoginBtn" id="logoutBtn"></button>
+        </div>
+    </header>
+
+    <div class="bazane">
+        <h2>Бажані фільми</h2>
+        <div class="recommend" id="wishlistContainer"></div>
+    </div>
+
+    <footer>
+        <p>Created by A and I studio</p>
+    </footer>
+
+    <script>
+        const user = JSON.parse(localStorage.getItem('logfilms_current') || 'null');
+        if (!user) {
+            window.location.href = 'login.html';
+        }
+
+        const logoutBtn = document.getElementById('logoutBtn');
+        logoutBtn.textContent = 'Вийти (' + user.username + ')';
+        logoutBtn.onclick = () => {
+            localStorage.removeItem('logfilms_current');
+            window.location.href = 'index.html';
+        };
+
+        document.querySelector('.homeBtn').onclick = () => {
+            window.location.href = 'index.html';
+        };
+    </script>
+</body>
+</html>
+//*нихуя ты молодец я даже 15 строк не написал а ты прям красава*/
+//*так короче, я зробив рейстрацію і логін, чисто для цього списку бажаного, тепер ти візьми всі ці файли і напиши нормальний
+робочий список бажаного, короче треба щоб ти коли натискав на фільм, бачив таку кнопачку на, яку натискаєш і вона додається
+в цей файл, а також записується в локал сторедж до відповідного UUID. Поняв? да за работу

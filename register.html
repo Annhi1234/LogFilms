@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="images/LogFilms.png">
+    <title>LogFilms Рейстрація</title>
+</head>
+<body>
+    <header>
+        <h1>LogFilms</h1>
+        <div class="search-container"></div>
+        <div class="GolBtn-wrapper"></div>
+    </header>
+
+    <div class="login-wrapper">
+        <div class="login-card">
+            <button class="BackBtn" onclick="window.location.href='index.html'">Назад</button>
+            <h2>Ласкаво просимо до LogFilms!</h2>
+            <p class="login-subtitle">Зареєструйтеся, щоб продовжити</p>
+            <form class="login-form" id="registerForm">
+                <input type="text" id="registerUsername" placeholder="Ім'я користувача" required>
+                <input type="password" id="registerPassword" placeholder="Пароль" required>
+                <button type="submit" class="searchBtn">Зареєструватися</button>
+                <a href="login.html" class="regBtn">Залогінитися</a>
+                <p class="login-error" id="registerError"></p>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>Created by A and I studio</p>
+    </footer>
+
+    <script src="auth.js"></script>
+</body>
+</html>

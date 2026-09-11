@@ -185,6 +185,7 @@ header input[type="text"]:focus {
 
 .searchBtn,
 .OnBtn,
+.LoginBtn,
 .GolBtn {
     padding: 12px 24px;
     border-radius: var(--radius);
@@ -231,6 +232,18 @@ header input[type="text"]:focus {
 }
 
 .OnBtn:hover {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}
+
+.LoginBtn {
+    background: transparent;
+    color: var(--text);
+    border-color: var(--border);
+}
+
+.LoginBtn:hover {
     background: var(--accent);
     color: white;
     border-color: var(--accent);
@@ -506,4 +519,157 @@ footer {
         transform: translateY(0) scale(1);
         opacity: 1;
     }
+}
+
+.login-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    padding: 70px var(--space-md) 90px;
+}
+
+.login-card {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    padding: 40px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    text-align: center;
+}
+
+.login-card h2 {
+    font-size: 28px;
+    font-weight: 800;
+    margin: 0 0 10px 0;
+    color: var(--text);
+}
+
+.login-subtitle {
+    font-size: 16px;
+    color: var(--text-muted);
+    margin: 0 0 30px 0;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.login-form input {
+    padding: 12px 18px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text);
+    font-size: 16px;
+    outline: none;
+    transition: var(--transition);
+}
+
+.login-form input::placeholder {
+    color: var(--text-muted);
+}
+
+.login-form input:focus {
+    border-color: var(--accent);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.login-form .searchBtn {
+    width: 100%;
+    padding: 12px 24px;
+    margin: 0;
+}
+
+.login-error {
+    color: #ff5555;
+    font-size: 14px;
+    margin: 0;
+    min-height: 18px;
+    font-weight: 600;
+}
+
+.regBtn {
+    padding: 12px 24px;
+    border-radius: var(--radius);
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    border: 1px solid var(--border);
+    color: var(--text);
+    transition: var(--transition);
+}
+
+.regBtn:hover {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}
+
+.homeBtn {
+    padding: 12px 24px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text);
+    transition: var(--transition);
+    white-space: nowrap;
+    margin: 0 5px;
+}
+
+.homeBtn:hover {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}
+
+.BackBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text);
+    transition: var(--transition);
+    white-space: nowrap;
+    margin: 0 0 20px 0;
+    align-self: flex-start;
+}
+
+.BackBtn::before {
+    content: '←';
+    font-size: 16px;
+}
+
+.BackBtn:hover {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+    transform: translateX(-2px);
+}
+
+.bazane {
+    flex: 1;
+    padding: var(--space-lg);
+    text-align: center;
+}
+
+.bazane h2 {
+    font-size: 32px;
+    font-weight: 800;
+    margin: 0 0 30px 0;
 }

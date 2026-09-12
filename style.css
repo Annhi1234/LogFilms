@@ -249,6 +249,29 @@ header input[type="text"]:focus {
     border-color: var(--accent);
 }
 
+.delete-account-btn {
+    width: 50px;
+    height: 45px;
+    padding: 0;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text);
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 5px;
+}
+
+.delete-account-btn:hover {
+    background: #ff5555;
+    border-color: #ff5555;
+    transform: scale(1.1);
+}
+
 .Welcome {
     display: flex;
     flex-direction: column;

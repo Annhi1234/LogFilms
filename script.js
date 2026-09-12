@@ -514,6 +514,21 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function deleteAccount() {
+        const user = getCurrentUser();
+        if (!user) return;
+
+        const users = JSON.parse(localStorage.getItem('logfilms_users') || '{}');
+        delete users[user.username];
+        localStorage.setItem('logfilms_users', JSON.stringify(users));
+
+        const id = user.uuid || user.id || user.username;
+        localStorage.removeItem(`wishlist_${id}`);
+        localStorage.removeItem('logfilms_current');
+
+        window.location.href = 'index.html';
+    }
+
     function updateAuthUI() {
         const user = getCurrentUser();
         if (user && GolBtn && LogBtn) {
@@ -526,12 +541,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.removeItem('logfilms_current');
                 window.location.reload();
             };
+
+            if (!document.getElementById('deleteAccountBtn')) {
+                const delBtn = document.createElement('button');
+                delBtn.id = 'deleteAccountBtn';
+                delBtn.className = 'delete-account-btn';
+                delBtn.innerHTML = '🗑️';
+                delBtn.title = 'Видалити акаунт';
+                delBtn.onclick = () => {
+                    if (confirm('Ви впевнені, що хочете видалити акаунт? Це повністю очисте всю інформацію вашого аканту, з вашого браузера')) {
+                        deleteAccount();
+                    }
+                };
+                LogBtn.parentNode.appendChild(delBtn);
+            }
         } else if (LogBtn) {
             if (GolBtn) GolBtn.style.display = 'none';
             LogBtn.textContent = 'Увійти';
             LogBtn.onclick = () => {
                 window.location.href = 'login.html';
             };
+            const delBtn = document.getElementById('deleteAccountBtn');
+            if (delBtn) delBtn.remove();
         }
     }
 

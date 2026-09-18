@@ -95,6 +95,70 @@ document.addEventListener('DOMContentLoaded', () => {
         return !exists;
     }
 
+    // ===== ОСТАННІ ПЕРЕГЛЯНУТІ =====
+    const MAX_RECENT = 8;
+
+    function getRecentKey() {
+        const user = getCurrentUser();
+        if (!user) return 'logfilms_recent_guest';
+        const id = user.uuid || user.id || user.username;
+        return `logfilms_recent_${id}`;
+    }
+
+    function getRecentMovies() {
+        return JSON.parse(localStorage.getItem(getRecentKey()) || '[]');
+    }
+
+    function addToRecent(movie) {
+        if (!movie || !movie.id) return;
+        let recent = getRecentMovies();
+        recent = recent.filter(m => m.id !== movie.id);
+        recent.unshift({
+            id: movie.id,
+            title: movie.title || movie.original_title,
+            original_title: movie.original_title,
+            poster_path: movie.poster_path,
+            release_date: movie.release_date,
+            vote_average: movie.vote_average
+        });
+        if (recent.length > MAX_RECENT) recent = recent.slice(0, MAX_RECENT);
+        localStorage.setItem(getRecentKey(), JSON.stringify(recent));
+        renderRecentMovies();
+    }
+
+    function renderRecentMovies() {
+        const container = document.getElementById('recentContainer');
+        const section = document.getElementById('recentSection');
+        if (!container || !section) return;
+
+        const recent = getRecentMovies();
+        if (recent.length === 0) {
+            section.style.display = 'none';
+            return;
+        }
+
+        section.style.display = 'block';
+        container.innerHTML = recent.map(movie => `
+            <div class="recent-card" data-movie='${JSON.stringify(movie).replace(/'/g, "&#39;")}'>
+                <img src="${movie.poster_path ? IMAGE_URL + movie.poster_path : 'placeholder.jpg'}" alt="${movie.title || movie.original_title}">
+                <p class="recent-card-title">${movie.title || movie.original_title}</p>
+            </div>
+        `).join('');
+
+        container.querySelectorAll('.recent-card').forEach(card => {
+            card.addEventListener('click', async function() {
+                const movieData = JSON.parse(this.dataset.movie);
+                const fullMovie = await getMovieDetails(movieData.id);
+                if (fullMovie) {
+                    openMovieModal(fullMovie);
+                } else {
+                    openMovieModal(movieData);
+                }
+            });
+        });
+    }
+    // ===== КІНЕЦЬ ОСТАННІХ ПЕРЕГЛЯНУТИХ =====
+
     function getRandomMovies(count = 18) {
         const shuffled = [...MOVIE_LIST].sort(() => Math.random() - 0.5);
         return shuffled.slice(0, count);
@@ -213,6 +277,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     window.openMovieModal = function(movie) {
+        addToRecent(movie);
+
         const modal = document.getElementById('movieModal');
         const modalBody = document.getElementById('modalBody');
 
@@ -524,6 +590,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const id = user.uuid || user.id || user.username;
         localStorage.removeItem(`wishlist_${id}`);
+        localStorage.removeItem(`logfilms_recent_${id}`);
         localStorage.removeItem('logfilms_current');
 
         window.location.href = 'index.html';
@@ -567,6 +634,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     updateAuthUI();
+    renderRecentMovies();
     if (genreSelect) fetchGenres();
     if (yearSelect) populateYears();
     if (recommend && !document.getElementById('wishlistContainer')) {
